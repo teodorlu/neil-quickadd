@@ -54,6 +54,7 @@
         selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" command-history)} "fzf")))]
     (prn ["neil" "dep" "add" selected])
     (process/shell "neil" "dep" "add" selected)
+    nil ; for now, supress output and don't validate
     ))
 
 (declare dispatch-table)
