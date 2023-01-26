@@ -2,7 +2,9 @@
 
 ## Installing
 
-To install the IKI CLI,
+    bbin install io.github.teodorlu/neil-quickadd --latest-sha
+
+## Installing a local development version
 
 1. Clone the repo,
 
