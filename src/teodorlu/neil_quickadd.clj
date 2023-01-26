@@ -1,8 +1,10 @@
 (ns teodorlu.neil-quickadd
   (:require
+   [babashka.cli :as cli]
    [babashka.fs :as fs]
-   [clojure.string :as str]
-   [babashka.cli :as cli]))
+   [babashka.process :as process]
+   [clojure.edn :as edn]
+   [clojure.string :as str]))
 
 ;; Rationale
 ;;
@@ -47,11 +49,25 @@
           (System/exit 1)))))
 
 (defn quickadd [{}]
-  ;; TODO
-  )
+  ;; TODO validation
+  (let [command-history (:history (edn/read-string (slurp (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn"))))
+        selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" command-history)} "fzf")))]
+    (prn ["neil" "dep" "add" selected])
+    (process/shell "neil" "dep" "add" selected)
+    ))
+
+(declare dispatch-table)
+
+(defn print-subcommands [{}]
+  (println "usage: ./play.clj <command>")
+  (println "")
+  (println "available commands:")
+  (doseq [{:keys [cmds]} dispatch-table]
+    (println (str "  " (str/join " " cmds)))))
 
 (def dispatch-table
-  [{:cmds ["rescan"] :fn quickadd-rescan}
+  [{:cmds ["help"] :fn print-subcommands}
+   {:cmds ["rescan"] :fn quickadd-rescan}
    {:cmds [] :fn quickadd}])
 
 (defn ensure-env-ok
@@ -62,6 +78,6 @@
     (println "Please install fzf, then call `neil-quickadd` again.")
     (System/exit 1)))
 
-(defn -main [args]
+(defn -main [& args]
   (ensure-env-ok)
   (cli/dispatch dispatch-table args))
