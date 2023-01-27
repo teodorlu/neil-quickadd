@@ -48,10 +48,19 @@
       (do (println "Unable to rescan history! This might be a bug.")
           (System/exit 1)))))
 
+(defn quickadd-libs* []
+  (let [command-history (:history (edn/read-string (slurp (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn"))))]
+    command-history))
+
+(defn quickadd-libs [{}]
+  (let [options (quickadd-libs*)]
+    ;; EDN or lines?
+    (println (str/join "\n" options))))
+
 (defn quickadd [{}]
   ;; TODO validation
-  (let [command-history (:history (edn/read-string (slurp (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn"))))
-        selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" command-history)} "fzf")))]
+  (let [libs (quickadd-libs*)
+        selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" libs)} "fzf")))]
     (prn ["neil" "dep" "add" selected])
     (process/shell "neil" "dep" "add" selected)
     nil ; for now, supress output and don't validate
@@ -60,7 +69,7 @@
 (declare dispatch-table)
 
 (defn print-subcommands [{}]
-  (println "usage: ./play.clj <command>")
+  (println "usage: neil-quickadd <command>")
   (println "")
   (println "available commands:")
   (doseq [{:keys [cmds]} dispatch-table]
@@ -69,6 +78,7 @@
 (def dispatch-table
   [{:cmds ["help"] :fn print-subcommands}
    {:cmds ["rescan"] :fn quickadd-rescan}
+   {:cmds ["libs"] :fn quickadd-libs}
    {:cmds [] :fn quickadd}])
 
 (defn ensure-env-ok
