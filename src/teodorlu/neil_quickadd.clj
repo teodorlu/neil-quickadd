@@ -30,8 +30,8 @@
                          (or (seq (keys (:deps (safe-read-edn-file deps-file {}))))
                              (list)))]
     (->> (mapcat safe-read-deps deps-files)
-                      (into #{})
-                      sort)))
+         (into #{})
+         sort)))
 
 (defn ^:private index-file-path []
   (str (fs/expand-home "~/.local/share/neil-quickadd") "/index.edn"))
