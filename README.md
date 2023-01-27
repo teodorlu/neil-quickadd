@@ -1,5 +1,8 @@
 # neil-quickadd
 
+Q: Is neil-quickadd affiliated with Neil?
+A: Not really. It uses Neil, but is not endorsed by Neil.
+
 ## Installing
 
     bbin install io.github.teodorlu/neil-quickadd --latest-sha
