@@ -77,10 +77,11 @@
       (println (str "  " "neil-quickadd " (str/join " " cmds) helptext)))))
 
 (def dispatch-table
-  [{:cmds ["help"] :fn print-subcommands :helptext "Get help!"}
-   {:cmds ["scan"] :fn quickadd-scan     :helptext "Scan a folder for dependencies" :args->opts [:path] }
-   {:cmds ["libs"] :fn quickadd-libs     :helptext "Show the index"}
-   {:cmds []       :fn quickadd          :helptext "Add a dependency from the index with FZF"}])
+  [{:cmds ["clear-index"] :fn quickadd-scan}
+   {:cmds ["help"]        :fn print-subcommands :helptext "Get help!"}
+   {:cmds ["libs"]        :fn quickadd-libs     :helptext "Show the index"}
+   {:cmds ["scan"]        :fn quickadd-scan     :helptext "Scan a folder for dependencies" :args->opts [:path]}
+   {:cmds []              :fn quickadd          :helptext "Add a dependency from the index with FZF"}])
 
 (defn ensure-env-ok
   "Terminate and give user error if the user needs to install something."
