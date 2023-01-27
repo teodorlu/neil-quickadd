@@ -45,7 +45,7 @@ then install the script with [babashka/bbin][babashka-bbin].
 
 ## Thanks!
 
-Without [@borkdude][borkdude] and [@rads][rads], `neil-quickadd` woudn't exist!
+Without [@borkdude][borkdude] and [@rads][rads], `neil-quickadd` woudn't exist. Thank you!
 
 [borkdude]: https://github.com/borkdude/
 [rads]: https://github.com/rads/
