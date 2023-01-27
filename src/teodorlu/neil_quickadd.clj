@@ -8,47 +8,11 @@
 
 ;; Rationale
 ;;
-;; neil dep add requires me to remember coordinates. I /can/ use Ctrl+R to find stuff I've added previously.
-;;
 ;; neil-quickadd approaches it differently.
 ;; There are two commands:
 ;;
-;;    neil-quickadd rescan   ; builds the quickadd index from your $SHELL history
-;;    neil-quickadd          ; based on your $SHELL history, add a dep, selecting dep with FZF
-
-(defn read-zshhistory []
-  (let [lines (->> (fs/expand-home "~/.zsh_history")
-                   str
-                   slurp
-                   str/split-lines)
-        neil-lines (filter #(str/includes? % "neil dep add") lines)
-        libs (map (fn [raw-line]
-                    (first
-                     (str/split (str/trim (str/replace raw-line #".*neil dep add" ""))
-                                #"\s+")))
-                  neil-lines)]
-    (->> libs
-         (remove #{"" ":h" "-h" "--help" ":help" "--lib" ":lib"})
-         (into #{})
-         sort)))
-
-(defn read-bashhistory []
-  ;; not yet!
-  (list))
-
-;; (defn read-deps-files [opts])
-
-(defn quickadd-scan-shell-history [{}]
-  (let [shell (-> (System/getenv "SHELL") (str/split #"/") last)
-        history (cond (= shell "zsh") (read-zshhistory)
-                      (= shell "bash") (read-bashhistory))]
-    (if-let [history (seq history)]
-      (do
-        (fs/create-dirs (fs/expand-home "~/.local/share/neil-quickadd"))
-        (spit (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn")
-              (pr-str {:history history})))
-      (do (println "Unable to rescan history! This might be a bug.")
-          (System/exit 1)))))
+;;    neil-quickadd scan PATH     ; Traverses PATH to find all your dependencies
+;;    neil-quickadd               ; based on your quickadd index, add a dep, selecting dep with FZF
 
 (defn ^:private safe-read-edn-file [path orelse]
   (try (edn/read-string (slurp path))
@@ -79,9 +43,6 @@
         all-deps (scan-deps-files path)]
     (update-index path (fn [_] all-deps))))
 
-(defn quickadd-command-history-libs* []
-  (:history (edn/read-string (slurp (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn")))))
-
 (defn quickadd-libs* []
   (when-let [libs (seq (apply concat (vals (safe-read-edn-file (index-file-path) {}))))]
     (sort (into #{} libs))))
@@ -110,15 +71,16 @@
   (println "usage: neil-quickadd <command>")
   (println "")
   (println "available commands:")
-  (doseq [{:keys [cmds]} dispatch-table]
-    (println (str "  " (str/join " " cmds)))))
+  (doseq [{:keys [cmds helptext]} dispatch-table]
+    (let [helptext (if helptext (str "     ; " helptext)
+                       "")]
+      (println (str "  " "neil-quickadd " (str/join " " cmds) helptext)))))
 
 (def dispatch-table
-  [{:cmds ["help"] :fn print-subcommands}
-   {:cmds ["scan-shell-history"] :fn quickadd-scan-shell-history}
-   {:cmds ["scan"] :fn quickadd-scan :args->opts [:path]}
-   {:cmds ["libs"] :fn quickadd-libs}
-   {:cmds [] :fn quickadd}])
+  [{:cmds ["help"] :fn print-subcommands :helptext "Get help!"}
+   {:cmds ["scan"] :fn quickadd-scan     :helptext "Scan a folder for dependencies" :args->opts [:path] }
+   {:cmds ["libs"] :fn quickadd-libs     :helptext "Show the index"}
+   {:cmds []       :fn quickadd          :helptext "Add a dependency from the index with FZF"}])
 
 (defn ensure-env-ok
   "Terminate and give user error if the user needs to install something."
