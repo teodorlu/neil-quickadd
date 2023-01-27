@@ -63,9 +63,11 @@
                       (into #{})
                       sort)))
 
+(defn ^:private index-file-path []
+  (str (fs/expand-home "~/.local/share/neil-quickadd") "/index.edn"))
+
 (defn ^:private update-index [k f & args]
-  (let [index-file-path (str (fs/expand-home "~/.local/share/neil-quickadd") "/index.edn")
-        m (safe-read-edn-file index-file-path {})
+  (let [m (safe-read-edn-file (index-file-path) {})
         m (if (map? m) m {})]
     (fs/create-dirs (fs/expand-home "~/.local/share/neil-quickadd"))
     (spit index-file-path
@@ -77,14 +79,21 @@
         all-deps (scan-deps-files path)]
     (update-index path (fn [_] all-deps))))
 
-(defn quickadd-libs* []
-  (let [command-history (:history (edn/read-string (slurp (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn"))))]
-    command-history))
+(defn quickadd-command-history-libs* []
+  (:history (edn/read-string (slurp (str (fs/expand-home "~/.local/share/neil-quickadd") "/history.edn")))))
 
-(defn quickadd-libs [{}]
-  (let [options (quickadd-libs*)]
+(defn quickadd-libs* []
+  (when-let [libs (seq (apply concat (vals (safe-read-edn-file (index-file-path) {}))))]
+    (sort (into #{} libs))))
+
+(defn quickadd-libs
+  [{}]
+  (if-let [libs (quickadd-libs*)]
     ;; EDN or lines?
-    (println (str/join "\n" options))))
+    (println (str/join "\n" libs))
+    (do (println "No libs indexed")
+        (println "Please use `neil-quickadd scan` to populate the index")
+        (System/exit 1))))
 
 (defn quickadd [{}]
   ;; TODO validation
