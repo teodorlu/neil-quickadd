@@ -1,9 +1,11 @@
 # neil-quickadd
 
-Q: Is neil-quickadd affiliated with Neil?<br>
+Q: Is neil-quickadd affiliated with Neil?
+<br>
 A: Not really. It uses Neil, but is not endorsed by Neil.
 
-Q: Should this be a neil subcommand?<br>
+Q: Should this be a neil subcommand?
+<br>
 A: Perhaps? Not sure. I say let it marinate for a while on its own first.
 
 ## Installing
