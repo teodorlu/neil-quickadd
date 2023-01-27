@@ -3,6 +3,9 @@
 Q: Is neil-quickadd affiliated with Neil?
 A: Not really. It uses Neil, but is not endorsed by Neil.
 
+Q: Should this be a neil subcommand?
+A: Perhaps? Not sure. I say let it marinate for a while on its own first.
+
 ## Installing
 
     bbin install io.github.teodorlu/neil-quickadd --latest-sha
