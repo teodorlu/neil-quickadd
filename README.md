@@ -13,13 +13,13 @@ Add the dependencies you usually use in seconds!
 
 ## FAQ
 
-Q: Is neil-quickadd affiliated with Neil?
+*Q:* Is neil-quickadd affiliated with Neil?
 <br>
-A: Not really. neil-quickadd uses Neil, but is not endorsed by Neil.
+*A:* Not really. neil-quickadd uses Neil, but is not endorsed by Neil.
 
-Q: Should this be a neil subcommand?
+*Q:* Should this be a neil subcommand?
 <br>
-A: Perhaps? Not sure. I say let it marinate for a while on its own first.
+*A:* Perhaps? Not sure. I say let it marinate for a while on its own first.
 
 ## Installing
 
