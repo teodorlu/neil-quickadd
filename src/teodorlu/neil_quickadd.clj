@@ -34,7 +34,7 @@
   (let [m (safe-read-edn-file (index-file-path) {})
         m (if (map? m) m {})]
     (fs/create-dirs (fs/expand-home "~/.local/share/neil-quickadd"))
-    (spit index-file-path
+    (spit (index-file-path)
           (pr-str (apply update m k f args)))))
 
 (defn quickadd-scan [{:keys [opts]}]
@@ -47,23 +47,28 @@
   (when-let [libs (seq (apply concat (vals (safe-read-edn-file (index-file-path) {}))))]
     (sort (into #{} libs))))
 
-(defn quickadd-libs
-  [{}]
+(defn quickadd-libs [{}]
   (if-let [libs (quickadd-libs*)]
-    ;; EDN or lines?
     (println (str/join "\n" libs))
     (do (println "No libs indexed")
         (println "Please use `neil-quickadd scan` to populate the index")
         (System/exit 1))))
 
+(defn quickadd-clear-index [{}]
+  (fs/delete-if-exists (index-file-path))
+  nil)
+
 (defn quickadd [{}]
   ;; TODO validation
-  (let [libs (quickadd-libs*)
-        selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" libs)} "fzf")))]
-    (prn ["neil" "dep" "add" selected])
-    (process/shell "neil" "dep" "add" selected)
-    nil ; for now, supress output and don't validate
-    ))
+  (if-let [libs (quickadd-libs*)]
+    (let [selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" libs)} "fzf")))]
+      (prn ["neil" "dep" "add" selected])
+      (process/shell "neil" "dep" "add" selected)
+      nil ; for now, supress output and don't validate
+      )
+    (do (println "No libs indexed")
+        (println "Please use `neil-quickadd scan` to populate the index")
+        (System/exit 1))))
 
 (declare dispatch-table)
 
@@ -77,7 +82,7 @@
       (println (str "  " "neil-quickadd " (str/join " " cmds) helptext)))))
 
 (def dispatch-table
-  [{:cmds ["clear-index"] :fn quickadd-scan}
+  [{:cmds ["clear-index"] :fn quickadd-clear-index}
    {:cmds ["help"]        :fn print-subcommands :helptext "Get help!"}
    {:cmds ["libs"]        :fn quickadd-libs     :helptext "Show the index"}
    {:cmds ["scan"]        :fn quickadd-scan     :helptext "Scan a folder for dependencies" :args->opts [:path]}
