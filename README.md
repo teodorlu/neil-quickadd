@@ -43,16 +43,20 @@ then install the script with [babashka/bbin][babashka-bbin].
 
 [babashka-bbin]: https://github.com/babashka/bbin
 
-## Usage from Emacs is on the wishlist
+## Wishlist: Usage from Emacs
 
 I'd like to provide a `neil-quickadd.el` with a `M-x neil-quickadd` function that uses `completing-read` for adding dependencies.
 But I haven't done that yet.
 Suggestions welcome!
 I don't think it should be too much work to wrap `neil-quickadd scan` (for adding) and `neil-quickadd libs` for listing, then selecting from within Emacs.
 
+## Wishlist: Multiple selection
+
+I believe FZF supports selecting multiple options. It would be nice if that just worked! Adding dependencies could be _even faster_.
+
 ## Thanks!
 
-Without [@borkdude][borkdude] and [@rads][rads], `neil-quickadd` woudn't exist. Thank you!
+Without [@borkdude][borkdude] and [@rads][rads], `neil-quickadd` wouldn't exist. Thank you!
 
 [borkdude]: https://github.com/borkdude/
 [rads]: https://github.com/rads/
