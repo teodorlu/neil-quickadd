@@ -34,11 +34,11 @@ Add the dependencies you usually use in seconds!
 
 Clone the repo,
 
-        git clone https://github.com/teodorlu/neil-quickadd.git
-        cd neil-quickadd
+    git clone https://github.com/teodorlu/neil-quickadd.git
+    cd neil-quickadd
         
 then install the script with [babashka/bbin][babashka-bbin].
 
-        bbin install .
+    bbin install .
 
 [babashka-bbin]: https://github.com/babashka/bbin
