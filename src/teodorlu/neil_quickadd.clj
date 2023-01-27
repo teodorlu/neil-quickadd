@@ -8,11 +8,17 @@
 
 ;; Rationale
 ;;
-;; neil-quickadd approaches it differently.
-;; There are two commands:
+;; `neil-quickadd` gets you started with your new Clojure project faster.
+;; Add the dependencies you usually use in seconds!
+;;
+;; There are two important commands:
 ;;
 ;;    neil-quickadd scan PATH     ; Traverses PATH to find all your dependencies
 ;;    neil-quickadd               ; based on your quickadd index, add a dep, selecting dep with FZF
+;;
+;; If you want to script around `neil-quickadd`, also consider:
+;;
+;;    neil-quickadd libs          ; list up all indexed libs
 
 (defn ^:private safe-read-edn-file [path orelse]
   (try (edn/read-string (slurp path))
