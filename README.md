@@ -43,12 +43,18 @@ then install the script with [babashka/bbin][babashka-bbin].
 
 [babashka-bbin]: https://github.com/babashka/bbin
 
-## Wishlist: Usage from Emacs
+## Usage from Emacs
 
-I'd like to provide a `neil-quickadd.el` with a `M-x neil-quickadd` function that uses `completing-read` for adding dependencies.
-But I haven't done that yet.
-Suggestions welcome!
-I don't think it should be too much work to wrap `neil-quickadd scan` (for adding) and `neil-quickadd libs` for listing, then selecting from within Emacs.
+From Doom Emacs:
+
+```emacs-lisp
+;; packages.el
+
+(package! neil-quickadd :recipe (:host github :repo "teodorlu/neil-quickadd" :files ("*.el")))
+
+;; config.el
+(use-package! neil-quickadd)
+```
 
 ## Wishlist: Multiple selection
 
