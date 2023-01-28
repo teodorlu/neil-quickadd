@@ -49,7 +49,6 @@ From Doom Emacs:
 
 ```emacs-lisp
 ;; packages.el
-
 (package! neil-quickadd :recipe (:host github :repo "teodorlu/neil-quickadd" :files ("*.el")))
 
 ;; config.el
