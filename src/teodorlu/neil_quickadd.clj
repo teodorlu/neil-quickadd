@@ -76,7 +76,7 @@ Allowed OPTS:
     (println (str/trim "
 Usage: neil-quicadd libs
 
-List all indexed libraries.
+List indexed libraries.
 "))
     (System/exit 0))
   (if-let [libs (quickadd-libs*)]
