@@ -53,10 +53,8 @@ Usage:
   neil-quickadd scan [OPTS...]
   neil-quickadd scan DIR [OPTS...]
 
-Traverses DIR, defaulting to the current directory, looking for dependencies in
-deps.edn files.
-
-Indexed dependencies will be available from `neil-quickadd`.
+Traverses DIR for dependencies. DIR defaults to the current directory.
+Dependencies are added to the neil-quickadd index.
 
 Allowed OPTS:
 
