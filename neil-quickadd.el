@@ -23,6 +23,7 @@
 (require 's)
 
 (defun neil-quickadd ()
+  "Quickly add a Clojure dependency with Neil."
   (interactive)
   (let* ((libs (s-lines (s-trim (shell-command-to-string "neil-quickadd libs"))))
          (selected (completing-read "> " libs)))
