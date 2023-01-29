@@ -28,5 +28,19 @@
          (selected (completing-read "> " libs)))
     (projectile-run-shell-command-in-root (s-concat "neil dep add " selected))))
 
+;; adding multiple after each other didn't feel right.
+;;
+;;  1. The deps.edn buffer doesn't update
+;;  2. It's really fast to M-x neal-quickadd again.
+;;
+;; So keep this in the "box of potential ideas" for now.
+;;
+;; (defun neil-quickadd-multi ()
+;;   (interactive)
+;;   (while 't
+;;     (let* ((libs (s-lines (s-trim (shell-command-to-string "neil-quickadd libs"))))
+;;            (selected (completing-read "> " libs)))
+;;       (projectile-run-shell-command-in-root (s-concat "neil dep add " selected)))))
+
 (provide 'neil-quickadd)
 ;;; neil-quickadd.el ends here
