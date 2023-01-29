@@ -73,7 +73,14 @@ Allowed OPTS:
   (when-let [libs (seq (apply concat (vals (safe-read-edn-file (index-file-path) {}))))]
     (sort (into #{} libs))))
 
-(defn quickadd-libs [{}]
+(defn quickadd-libs [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (println (str/trim "
+Usage: neil-quicadd libs
+
+List all indexed libraries.
+"))
+    (System/exit 0))
   (if-let [libs (quickadd-libs*)]
     (println (str/join "\n" libs))
     (do (println "No libs indexed")
