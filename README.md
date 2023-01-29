@@ -21,10 +21,10 @@ Add the dependencies you usually use in seconds!
 
 ## Installing
 
-1. Install Neil: https://github.com/babashka/neil
-2. Install fzf: https://github.com/junegunn/fzf
-3. Install bbin: https://github.com/babashka/bbin
-3. Install neil-quickadd with bbin:
+1.  Install Neil: https://github.com/babashka/neil
+2.  Install fzf: https://github.com/junegunn/fzf
+3.  Install bbin: https://github.com/babashka/bbin
+4.  Install neil-quickadd with bbin:
 
         bbin install io.github.teodorlu/neil-quickadd --latest-sha
 
