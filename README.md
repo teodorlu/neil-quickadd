@@ -7,9 +7,9 @@ Add your stock dependencies in seconds!
 
 ## Usage
 
-`neil-quickadd scan PATH` - Recursively indexes libraries found in toplevel `:deps` from `deps.edn` files a directory.
+`neil-quickadd scan DIR` - Scan all dependencies you've used in `deps.edn` files found in `DIR`.
 
-`neil-quickadd` - Lets you pick a dependency with `fzf`, then adds it with `neil dep add`. Easy!
+`neil-quickadd` - Quickly add an indexed dependency.
 
 ## FAQ
 
