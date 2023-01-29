@@ -24,14 +24,16 @@
   (try (edn/read-string (slurp path))
        (catch Exception _ orelse)))
 
-(defn ^:private scan-deps-files [path]
-  (let [deps-files (map str (fs/glob path "**/deps.edn"))
-        safe-read-deps (fn [deps-file]
-                         (or (seq (keys (:deps (safe-read-edn-file deps-file {}))))
-                             (list)))]
-    (->> (mapcat safe-read-deps deps-files)
-         (into #{})
-         sort)))
+(defn ^:private scan-deps-files
+  ([path] (scan-deps-files path nil))
+  ([path {:keys [max-depth]}]
+   (let [deps-files (map str (fs/glob path "**/deps.edn" (when max-depth {:max-depth max-depth})))
+         safe-read-deps (fn [deps-file]
+                          (or (seq (keys (:deps (safe-read-edn-file deps-file {}))))
+                              (list)))]
+     (->> (mapcat safe-read-deps deps-files)
+          (into #{})
+          sort))))
 
 (defn ^:private index-file-path []
   (str (fs/expand-home "~/.local/share/neil-quickadd") "/index.edn"))
@@ -44,9 +46,27 @@
           (pr-str (apply update m k f args)))))
 
 (defn quickadd-scan [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (println (str/trim "
+Usage:
+
+  neil-quickadd scan [OPTS...]
+  neil-quickadd scan DIR [OPTS...]
+
+Traverses DIR, defaulting to the current directory, looking for dependencies in
+deps.edn files.
+
+Indexed dependencies will be available from `neil-quickadd`.
+
+Allowed OPTS:
+
+  --maxdepth N     ; Limits the traversal to N layers down from DIR.
+"))
+    (System/exit 0))
   (let [path (:path opts ".")
         path (-> path fs/expand-home fs/absolutize str)
-        all-deps (scan-deps-files path)]
+        {:keys [max-depth]} opts
+        all-deps (scan-deps-files path (when max-depth {:max-depth max-depth}))]
     (update-index path (fn [_] all-deps))))
 
 (defn quickadd-libs* []
@@ -64,8 +84,12 @@
   (fs/delete-if-exists (index-file-path))
   nil)
 
-(defn quickadd [{}]
-  ;; TODO validation
+(declare print-subcommands)
+
+(defn quickadd [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (print-subcommands {})
+    (System/exit 0))
   (if-let [libs (quickadd-libs*)]
     (loop []
       (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
