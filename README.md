@@ -55,10 +55,6 @@ From Doom Emacs:
 (use-package! neil-quickadd)
 ```
 
-## Wishlist: Multiple selection
-
-I believe FZF supports selecting multiple options. It would be nice if that just worked! Adding dependencies could be _even faster_.
-
 ## Thanks!
 
 Without [@borkdude][borkdude] and [@rads][rads], `neil-quickadd` wouldn't exist. Thank you!
