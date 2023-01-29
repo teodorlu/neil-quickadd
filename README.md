@@ -26,7 +26,10 @@ Add the dependencies you usually use in seconds!
 3.  Install bbin: https://github.com/babashka/bbin
 4.  Install neil-quickadd with bbin:
 
-        bbin install io.github.teodorlu/neil-quickadd --latest-sha
+    ```
+    bbin install io.github.teodorlu/neil-quickadd --latest-sha
+    ```
+
 
 ## Installing a local development version
 
