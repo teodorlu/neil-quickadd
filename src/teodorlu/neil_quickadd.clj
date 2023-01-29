@@ -61,11 +61,11 @@ Allowed OPTS:
   --maxdepth N     ; Limits the traversal to N layers down from DIR.
 "))
     (System/exit 0))
-  (let [path (:path opts ".")
-        path (-> path fs/expand-home fs/absolutize str)
+  (let [root-dir (:path opts ".")
+        root-dir (-> root-dir fs/expand-home fs/absolutize str)
         {:keys [max-depth]} opts
-        all-deps (scan-deps-files path (when max-depth {:max-depth max-depth}))]
-    (update-index path (fn [_] all-deps))))
+        all-deps (scan-deps-files root-dir (when max-depth {:max-depth max-depth}))]
+    (update-index root-dir (fn [_] all-deps))))
 
 (defn quickadd-libs* []
   (when-let [libs (seq (apply concat (vals (safe-read-edn-file (index-file-path) {}))))]
