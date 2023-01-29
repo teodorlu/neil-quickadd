@@ -110,20 +110,24 @@ Allowed OPTS:
 (declare dispatch-table)
 
 (defn print-subcommands [{}]
-  (println "usage: neil-quickadd <command>")
-  (println "")
-  (println "available commands:")
-  (doseq [{:keys [cmds helptext]} dispatch-table]
-    (let [helptext (if helptext (str "     ; " helptext)
-                       "")]
-      (println (str "  " "neil-quickadd " (str/join " " cmds) helptext)))))
+  (println (str/trim "
+Usage: neil-quickadd [COMMAND] [OPT...]
+
+Available commands:
+
+  neil-quickadd clear-index  ; Remove the index
+  neil-quickadd help         ; Print subcommands
+  neil-quickadd libs         ; Show the index
+  neil-quickadd scan         ; Scan a folder for dependencies
+  neil-quickadd              ; Add a dependency from the index with FZF
+")))
 
 (def dispatch-table
   [{:cmds ["clear-index"] :fn quickadd-clear-index}
-   {:cmds ["help"]        :fn print-subcommands :helptext "Get help!"}
-   {:cmds ["libs"]        :fn quickadd-libs     :helptext "Show the index"}
-   {:cmds ["scan"]        :fn quickadd-scan     :helptext "Scan a folder for dependencies" :args->opts [:path]}
-   {:cmds []              :fn quickadd          :helptext "Add a dependency from the index with FZF"}])
+   {:cmds ["help"]        :fn print-subcommands }
+   {:cmds ["libs"]        :fn quickadd-libs     }
+   {:cmds ["scan"]        :fn quickadd-scan      :args->opts [:path]}
+   {:cmds []              :fn quickadd          }])
 
 (defn ensure-env-ok
   "Terminate and give user error if the user needs to install something."
