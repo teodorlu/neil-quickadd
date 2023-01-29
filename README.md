@@ -5,7 +5,7 @@ Add the dependencies you usually use in seconds!
 
 ## Usage
 
-`neil-quickadd scan DIR` - Scan all dependencies you've used in `deps.edn` files found in `DIR`.
+`neil-quickadd scan DIR` - Scan `DIR` for `deps.edn` files with dependencies.
 
 `neil-quickadd` - Quickly add an indexed dependency.
 
