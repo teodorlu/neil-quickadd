@@ -80,7 +80,14 @@ Allowed OPTS:
         (println "Please use `neil-quickadd scan` to populate the index")
         (System/exit 1))))
 
-(defn quickadd-clear-index [{}]
+(defn quickadd-clear-index [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (println (str/trim "
+Usage: neil-quicadd clear-index
+
+Deletes the index of scanned libraries.
+"))
+    (System/exit 0))
   (fs/delete-if-exists (index-file-path))
   nil)
 
