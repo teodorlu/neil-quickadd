@@ -13,12 +13,13 @@
 ;;
 ;; There are two important commands:
 ;;
-;;    neil-quickadd scan PATH     ; Traverses PATH to find all your dependencies
-;;    neil-quickadd               ; based on your quickadd index, add a dep, selecting dep with FZF
+;;    neil-quickadd scan DIR   ; Traverses DIR to index all your dependencies
+;;    neil-quickadd            ; from your quickadd index, select a dep with
+;;                              `fzf` and add it with `neil dep add`
 ;;
 ;; If you want to script around `neil-quickadd`, also consider:
 ;;
-;;    neil-quickadd libs          ; list up all indexed libs
+;;    neil-quickadd libs          ; list indexed libs
 
 (defn ^:private safe-read-edn-file [path orelse]
   (try (edn/read-string (slurp path))

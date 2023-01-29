@@ -1,7 +1,7 @@
 # neil-quickadd
 
 `neil-quickadd` gets you started with your new Clojure project faster.
-Add your stock dependencies in seconds!
+Add the dependencies you usually use in seconds!
 
 ## Usage
 
