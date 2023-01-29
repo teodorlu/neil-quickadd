@@ -67,11 +67,18 @@
 (defn quickadd [{}]
   ;; TODO validation
   (if-let [libs (quickadd-libs*)]
-    (let [selected (str/trim (:out (process/shell {:out :string :in (str/join "\n" libs)} "fzf")))]
-      (prn ["neil" "dep" "add" selected])
-      (process/shell "neil" "dep" "add" selected)
-      nil ; for now, supress output and don't validate
-      )
+    (loop []
+      (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
+        (when (not= 0 (:exit fzf-result))
+          ;; ensure we terminate if fzf receives Ctrl-C
+          (System/exit 0))
+        (let [selected (str/trim (:out fzf-result))]
+          (when (= ":quit" selected)
+            ;; Also provide a "non crashing" exit option.
+            (System/exit 0))
+          (prn ["neil" "dep" "add" selected])
+          (process/shell "neil" "dep" "add" selected)
+          (recur))))
     (do (println "No libs indexed")
         (println "Please use `neil-quickadd scan` to populate the index")
         (System/exit 1))))
