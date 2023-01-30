@@ -103,8 +103,7 @@ Deletes the index of scanned libraries.
   (let [process-result (process/shell {:out :string}
                                       "neil" "dep" "versions" lib)]
     (when (= 0 (:exit process-result))
-      (for [line (str/split-lines (str/trim (:out process-result)))]
-        (process/tokenize line)))))
+      (:out process-result))))
 
 (defn ^:private neil-dep-add [& args]
   (apply process/shell "neil" "dep" "add" args))
@@ -124,14 +123,18 @@ Deletes the index of scanned libraries.
             ;; Also provide a "non crashing" exit option.
             (System/exit 0))
           (if (:select-version opts)
-            (do
-              (prn :select-version)
-              (recur))
+            (let [versions-string (neil-dep-versions selected)
+                  selected-process-result (process/shell {:out :string :in versions-string} "fzf")]
+              (when (= 0 (:exit selected-process-result))
+                (let [selected-tokenized (process/tokenize (:out selected-process-result))]
+                  (prn (concat ["neil" "dep" "add"]
+                               selected-tokenized))
+                  (apply neil-dep-add selected-tokenized)
+                 (recur))))
             (do
               (prn ["neil" "dep" "add" selected])
-              (process/shell "neil" "dep" "add" selected)
-              (recur))
-            )
+              (neil-dep-add selected)
+              (recur)))
           )))
     (do (println "No libs indexed")
         (println "Please use `neil-quickadd scan` to populate the index")
