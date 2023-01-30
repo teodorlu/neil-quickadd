@@ -99,6 +99,16 @@ Deletes the index of scanned libraries.
 
 (declare print-subcommands)
 
+(defn ^:private neil-dep-versions [lib]
+  (let [process-result (process/shell {:out :string}
+                                      "neil" "dep" "versions" lib)]
+    (when (= 0 (:exit process-result))
+      (for [line (str/split-lines (str/trim (:out process-result)))]
+        (process/tokenize line)))))
+
+(defn ^:private neil-dep-add [& args]
+  (apply process/shell "neil" "dep" "add" args))
+
 (defn quickadd [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
     (print-subcommands {})
@@ -113,9 +123,16 @@ Deletes the index of scanned libraries.
           (when (= ":quit" selected)
             ;; Also provide a "non crashing" exit option.
             (System/exit 0))
-          (prn ["neil" "dep" "add" selected])
-          (process/shell "neil" "dep" "add" selected)
-          (recur))))
+          (if (:select-version opts)
+            (do
+              (prn :select-version)
+              (recur))
+            (do
+              (prn ["neil" "dep" "add" selected])
+              (process/shell "neil" "dep" "add" selected)
+              (recur))
+            )
+          )))
     (do (println "No libs indexed")
         (println "Please use `neil-quickadd scan` to populate the index")
         (System/exit 1))))
