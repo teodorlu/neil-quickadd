@@ -116,7 +116,7 @@ Deletes the index of scanned libraries.
     (loop []
       (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
         (when (not= 0 (:exit fzf-result))
-          ;; ensure we terminate if fzf receives Ctrl-C
+          ;; If FZF terminates, we terminate.
           (System/exit 0))
         (let [selected (str/trim (:out fzf-result))]
           (when (= ":quit" selected)
