@@ -21,7 +21,7 @@
 ;;
 ;;    neil-quickadd libs          ; list indexed libs
 
-(defn ^:private safe-read-edn-file [path orelse]
+(defn ^:private safely-slurp-edn [path orelse]
   (try (edn/read-string (slurp path))
        (catch Exception _ orelse)))
 
@@ -30,7 +30,7 @@
   ([path {:keys [max-depth]}]
    (let [deps-files (map str (fs/glob path "**/deps.edn" (when max-depth {:max-depth max-depth})))
          safe-read-deps (fn [deps-file]
-                          (or (seq (keys (:deps (safe-read-edn-file deps-file {}))))
+                          (or (seq (keys (:deps (safely-slurp-edn deps-file {}))))
                               (list)))]
      (->> (mapcat safe-read-deps deps-files)
           (into #{})
@@ -40,7 +40,7 @@
   (str (fs/expand-home "~/.local/share/neil-quickadd") "/index.edn"))
 
 (defn ^:private update-index [k f & args]
-  (let [m (safe-read-edn-file (index-file-path) {})
+  (let [m (safely-slurp-edn (index-file-path) {})
         m (if (map? m) m {})]
     (fs/create-dirs (fs/expand-home "~/.local/share/neil-quickadd"))
     (spit (index-file-path)
@@ -69,7 +69,7 @@ Allowed OPTS:
     (update-index root-dir (fn [_] all-deps))))
 
 (defn quickadd-libs* []
-  (when-let [libs (seq (apply concat (vals (safe-read-edn-file (index-file-path) {}))))]
+  (when-let [libs (seq (apply concat (vals (safely-slurp-edn (index-file-path) {}))))]
     (sort (into #{} libs))))
 
 (defn quickadd-libs [{:keys [opts]}]
