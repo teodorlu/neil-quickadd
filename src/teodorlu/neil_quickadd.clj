@@ -6,6 +6,10 @@
    [clojure.edn :as edn]
    [clojure.string :as str]))
 
+;; workaround for https://github.com/teodorlu/neil-quickadd/issues/1 and https://github.com/babashka/fs/issues/89
+
+(require '[babashka.fs] :reload)
+
 ;; Rationale
 ;;
 ;; `neil-quickadd` gets you started with your new Clojure project faster.
