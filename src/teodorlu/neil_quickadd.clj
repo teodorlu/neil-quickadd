@@ -156,6 +156,10 @@ Available commands:
   neil-quickadd libs         ; Show the index
   neil-quickadd scan         ; Scan a folder for dependencies
   neil-quickadd              ; Add a dependency from the index with FZF
+
+Available options:
+
+  --select-version           ; Ask the user to select versions rather than auto-selecting
 ")))
 
 (def dispatch-table
