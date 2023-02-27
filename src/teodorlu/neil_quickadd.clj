@@ -4,6 +4,7 @@
    [babashka.fs :as fs]
    [babashka.process :as process]
    [clojure.edn :as edn]
+   [clojure.set :as set]
    [clojure.string :as str]))
 
 ;; workaround for https://github.com/teodorlu/neil-quickadd/issues/1 and https://github.com/babashka/fs/issues/89
@@ -91,9 +92,14 @@ Allowed OPTS:
         all-deps (scan-deps-files root-dir (when max-depth {:max-depth max-depth}))]
     (update-index! root-dir (fn [_] all-deps))))
 
+(defn quickadd-libs-raw* []
+  (into #{} (seq (apply concat (vals (safely-slurp-edn (index-file-path) {}))))))
+
+(defn quickadd-blacklist* []
+  (into #{} (:blacklist (safely-slurp-edn (blacklist-file-path) {}))))
+
 (defn quickadd-libs* []
-  (when-let [libs (into #{} (seq (apply concat (vals (safely-slurp-edn (index-file-path) {})))))]
-    (sort libs)))
+  (set/difference (quickadd-libs-raw*) (quickadd-blacklist*)))
 
 (defn quickadd-libs [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
@@ -103,7 +109,7 @@ Usage: neil-quicadd libs
 List indexed libraries.
 "))
     (System/exit 0))
-  (if-let [libs (quickadd-libs*)]
+  (if-let [libs (sort (quickadd-libs*))]
     (println (str/join "\n" libs))
     (do (println "No libs indexed")
         (println "Please use `neil-quickadd scan` to populate the index")
@@ -135,7 +141,7 @@ when running neil-quickadd.
 "))
     (System/exit 0))
   (loop []
-    (if-let [libs (quickadd-libs*)]
+    (if-let [libs (sort (quickadd-libs*))]
       (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
         (when (not= 0 (:exit fzf-result))
           ;; If FZF terminates, we terminate.
@@ -167,7 +173,7 @@ when running neil-quickadd.
   (when (or (:h opts) (:help opts))
     (print-subcommands {})
     (System/exit 0))
-  (if-let [libs (quickadd-libs*)]
+  (if-let [libs (sort (quickadd-libs*))]
     (loop []
       (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
         (when (not= 0 (:exit fzf-result))
