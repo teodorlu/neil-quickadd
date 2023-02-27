@@ -21,6 +21,7 @@ Add the dependencies you usually use in seconds!
 
 ## Installing
 
+0. Install Babashka: https://github.com/babashka/babashka
 1. Install Neil: https://github.com/babashka/neil
 2. Install fzf: https://github.com/junegunn/fzf
 3. Install bbin: https://github.com/babashka/bbin
