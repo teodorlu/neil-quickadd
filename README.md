@@ -44,9 +44,7 @@ then install the script with [babashka/bbin][babashka-bbin].
 
 [babashka-bbin]: https://github.com/babashka/bbin
 
-## Usage from Emacs
-
-From Doom Emacs:
+## Doom Emacs usage
 
 ```emacs-lisp
 ;; packages.el
