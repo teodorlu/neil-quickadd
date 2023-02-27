@@ -39,15 +39,35 @@
           (into #{})
           sort))))
 
-(defn ^:private index-file-path []
-  (str (fs/expand-home "~/.local/share/neil-quickadd") "/index.edn"))
+(defn ^:private neil-quickadd-share-path []
+  (fs/expand-home "~/.local/share/neil-quickadd"))
 
-(defn ^:private update-index [k f & args]
+(defn ^:private neil-quickadd-ensure-share-path! []
+  (fs/create-dirs (neil-quickadd-share-path)))
+
+(defn ^:private index-file-path []
+  (str (neil-quickadd-share-path) "/index.edn"))
+
+(defn ^:private update-index! [k f & args]
   (let [m (safely-slurp-edn (index-file-path) {})
         m (if (map? m) m {})]
-    (fs/create-dirs (fs/expand-home "~/.local/share/neil-quickadd"))
+    (neil-quickadd-ensure-share-path!)
     (spit (index-file-path)
           (pr-str (apply update m k f args)))))
+
+(defn ^:private blacklist-file-path []
+  (str (neil-quickadd-share-path) "/blacklist.edn"))
+
+(defn ^:private blacklist-add! [& libs]
+  (let [m (safely-slurp-edn (blacklist-file-path) {})
+        m (if (map? m) m {})
+        blacklist (get m :blacklist)
+        blacklist (if (set? blacklist) blacklist #{})]
+    (neil-quickadd-ensure-share-path!)
+    (spit (blacklist-file-path)
+          (prn-str
+           (assoc m :blacklist
+                  (into blacklist libs))))))
 
 (defn quickadd-scan [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
@@ -69,7 +89,7 @@ Allowed OPTS:
         root-dir (-> root-dir fs/expand-home fs/absolutize str)
         {:keys [max-depth]} opts
         all-deps (scan-deps-files root-dir (when max-depth {:max-depth max-depth}))]
-    (update-index root-dir (fn [_] all-deps))))
+    (update-index! root-dir (fn [_] all-deps))))
 
 (defn quickadd-libs* []
   (when-let [libs (seq (apply concat (vals (safely-slurp-edn (index-file-path) {}))))]
@@ -100,6 +120,11 @@ Deletes the index of scanned libraries.
   (fs/delete-if-exists (index-file-path))
   nil)
 
+(symbol "teodor.thing/abc")
+
+(:user/dev {:user/dev 123})
+(get {(symbol "user/dev") 123} 'user/dev)
+
 (defn quickadd-blacklist-lib [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
     (println (str/trim "
@@ -109,6 +134,30 @@ Select a library to be added to the blacklist. Blacklisted libaries are ignored
 when running neil-quickadd.
 "))
     (System/exit 0))
+  (if-let [libs (quickadd-libs*)]
+    (loop []
+      (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
+        (when (not= 0 (:exit fzf-result))
+          ;; If FZF terminates, we terminate.
+          (System/exit 0))
+        (let [selected (str/trim (:out fzf-result))]
+          (when (= ":quit" selected)
+            ;; Also provide a "non crashing" exit option.
+            (System/exit 0))
+
+          ;; FIXME
+          (blacklist-add! (symbol selected))
+          (recur)
+
+          #_
+          (do
+            (prn ["neil" "dep" "add" selected])
+            (neil-dep-add selected)
+            (recur))
+          )))
+    (do (println "No libs indexed")
+        (println "Please use `neil-quickadd scan` to populate the index")
+        (System/exit 1)))
   (println 'quickadd-blacklist-index))
 
 (declare print-subcommands)
