@@ -40,10 +40,6 @@ Clone the repo,
         
 then install the script with [babashka/bbin][babashka-bbin].
 
-    bbin install .
-
-or choose a different local binary name, if you prefer.
-
     bbin install . --as neil-quickadd-dev
 
 [babashka-bbin]: https://github.com/babashka/bbin
