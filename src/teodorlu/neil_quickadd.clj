@@ -92,8 +92,8 @@ Allowed OPTS:
     (update-index! root-dir (fn [_] all-deps))))
 
 (defn quickadd-libs* []
-  (when-let [libs (seq (apply concat (vals (safely-slurp-edn (index-file-path) {}))))]
-    (sort (into #{} libs))))
+  (when-let [libs (into #{} (seq (apply concat (vals (safely-slurp-edn (index-file-path) {})))))]
+    (sort libs)))
 
 (defn quickadd-libs [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
