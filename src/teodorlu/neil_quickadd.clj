@@ -100,6 +100,17 @@ Deletes the index of scanned libraries.
   (fs/delete-if-exists (index-file-path))
   nil)
 
+(defn quickadd-blacklist-lib [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (println (str/trim "
+Usage: neil-quicadd blacklist-lib
+
+Select a library to be added to the blacklist. Blacklisted libaries are ignored
+when running neil-quickadd.
+"))
+    (System/exit 0))
+  (println 'quickadd-blacklist-index))
+
 (declare print-subcommands)
 
 (defn ^:private neil-dep-versions [lib]
@@ -151,11 +162,12 @@ Usage: neil-quickadd [COMMAND] [OPT...]
 
 Available commands:
 
-  neil-quickadd clear-index  ; Remove the index
-  neil-quickadd help         ; Print subcommands
-  neil-quickadd libs         ; Show the index
-  neil-quickadd scan         ; Scan a folder for dependencies
-  neil-quickadd              ; Add a dependency from the index with FZF
+  neil-quickadd                ; Add a dependency from the index with FZF
+  neil-quickadd blacklist-lib  ; Select a library for blacklisting
+  neil-quickadd clear-index    ; Remove the index
+  neil-quickadd help           ; Print subcommands
+  neil-quickadd libs           ; Show the index
+  neil-quickadd scan           ; Scan a folder for dependencies
 
 Available options:
 
@@ -163,11 +175,12 @@ Available options:
 ")))
 
 (def dispatch-table
-  [{:cmds ["clear-index"] :fn quickadd-clear-index}
-   {:cmds ["help"]        :fn print-subcommands }
-   {:cmds ["libs"]        :fn quickadd-libs     }
-   {:cmds ["scan"]        :fn quickadd-scan      :args->opts [:path]}
-   {:cmds []              :fn quickadd          }])
+  [{:cmds ["clear-index"]   :fn quickadd-clear-index}
+   {:cmds ["help"]          :fn print-subcommands }
+   {:cmds ["libs"]          :fn quickadd-libs     }
+   {:cmds ["scan"]          :fn quickadd-scan      :args->opts [:path]}
+   {:cmds ["blacklist-lib"] :fn quickadd-blacklist-lib}
+   {:cmds []                :fn quickadd          }])
 
 (defn ensure-env-ok
   "Terminate and give user error if the user needs to install something."
