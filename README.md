@@ -21,6 +21,7 @@ Add the dependencies you usually use in seconds!
 
 ## Installing
 
+0. Install Babashka: https://github.com/babashka/babashka
 1. Install Neil: https://github.com/babashka/neil
 2. Install fzf: https://github.com/junegunn/fzf
 3. Install bbin: https://github.com/babashka/bbin
@@ -40,13 +41,11 @@ Clone the repo,
         
 then install the script with [babashka/bbin][babashka-bbin].
 
-    bbin install .
+    bbin install . --as neil-quickadd-dev
 
 [babashka-bbin]: https://github.com/babashka/bbin
 
-## Usage from Emacs
-
-From Doom Emacs:
+## Doom Emacs usage
 
 ```emacs-lisp
 ;; packages.el
