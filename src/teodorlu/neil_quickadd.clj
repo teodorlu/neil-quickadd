@@ -134,8 +134,8 @@ Select a library to be added to the blacklist. Blacklisted libaries are ignored
 when running neil-quickadd.
 "))
     (System/exit 0))
-  (if-let [libs (quickadd-libs*)]
-    (loop []
+  (loop []
+    (if-let [libs (quickadd-libs*)]
       (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
         (when (not= 0 (:exit fzf-result))
           ;; If FZF terminates, we terminate.
@@ -147,18 +147,10 @@ when running neil-quickadd.
 
           ;; FIXME
           (blacklist-add! (symbol selected))
-          (recur)
-
-          #_
-          (do
-            (prn ["neil" "dep" "add" selected])
-            (neil-dep-add selected)
-            (recur))
-          )))
-    (do (println "No libs indexed")
-        (println "Please use `neil-quickadd scan` to populate the index")
-        (System/exit 1)))
-  (println 'quickadd-blacklist-index))
+          (recur)))
+      (do (println "No libs indexed")
+          (println "Please use `neil-quickadd scan` to populate the index")
+          (System/exit 1)))))
 
 (declare print-subcommands)
 
