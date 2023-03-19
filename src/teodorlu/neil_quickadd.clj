@@ -225,7 +225,7 @@ Available commands:
 
 Available options:
 
-  --select-version           ; Ask the user to select versions rather than auto-selecting
+  --select-version             ; Ask the user to select versions, instead of deferring to neil defaults
 ")))
 
 (def dispatch-table
