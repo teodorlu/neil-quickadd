@@ -2,13 +2,16 @@
   (:require
    [babashka.cli :as cli]
    [babashka.fs :as fs]
-   [babashka.process :as process]
+   [babashka.process :as process :refer [shell]]
    [clojure.edn :as edn]
    [clojure.set :as set]
    [clojure.string :as str]))
 
 ;; workaround for https://github.com/teodorlu/neil-quickadd/issues/1 and https://github.com/babashka/fs/issues/89
 (require '[babashka.fs] :reload)
+
+(comment
+  (require '[teodorlu.some-lib] :reload))
 
 ;; Rationale
 ;;
@@ -161,13 +164,13 @@ when running neil-quickadd.
 (declare print-subcommands)
 
 (defn ^:private neil-dep-versions [lib]
-  (let [process-result (process/shell {:out :string}
-                                      "neil" "dep" "versions" lib)]
+  (let [process-result (shell {:out :string :continue true}
+                              "neil" "dep" "versions" lib)]
     (when (= 0 (:exit process-result))
       (:out process-result))))
 
 (defn ^:private neil-dep-add [& args]
-  (apply process/shell "neil" "dep" "add" args))
+  (apply shell "neil" "dep" "add" args))
 
 (defn quickadd [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
@@ -175,7 +178,10 @@ when running neil-quickadd.
     (System/exit 0))
   (if-let [libs (sort (quickadd-libs*))]
     (loop []
-      (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
+      (let [fzf-result (shell {:out :string
+                               :continue true
+                               :in (str/join "\n" (into [":quit"] libs))}
+                              "fzf")]
         (when (not= 0 (:exit fzf-result))
           ;; If FZF terminates, we terminate.
           (System/exit 0))
@@ -185,7 +191,8 @@ when running neil-quickadd.
             (System/exit 0))
           (if (:select-version opts)
             (let [versions-string (neil-dep-versions selected)
-                  selected-process-result (process/shell {:out :string :in versions-string} "fzf")]
+                  selected-process-result (shell {:out :string :continue true :in versions-string}
+                                                 "fzf")]
               (when (= 0 (:exit selected-process-result))
                 (let [selected-tokenized (process/tokenize (:out selected-process-result))]
                   (prn (concat ["neil" "dep" "add"]
