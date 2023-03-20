@@ -24,7 +24,7 @@
 
 (defun neil-quickadd-binary ()
   "Which neil binary name to use"
-  "neil-quickadd-dev")
+  "neil-quickadd")
 
 (defun neil-quickadd ()
   "Add a deps.edn dependency."
