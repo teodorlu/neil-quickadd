@@ -107,7 +107,7 @@ Allowed OPTS:
 (defn quickadd-libs [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
     (println (str/trim "
-Usage: neil-quicadd libs
+Usage: neil-quickadd libs
 
 List indexed libraries.
 "))
@@ -118,10 +118,27 @@ List indexed libraries.
         (println "Please use `neil-quickadd scan` to populate the index")
         (System/exit 1))))
 
+(defn quickadd-blacklist-list
+  "Print the blacklist"
+  [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (println (str/trim "
+Usage: neil-quickadd blacklist-list
+
+List blacklisted libraries.
+"))
+    (System/exit 0))
+  (let [libs (sort (quickadd-blacklist*))]
+    (if (seq libs)
+      (println (str/join "\n" libs))
+      (do (println "No libs blacklisted")
+          (println "Please run `neil-quickadd -h` to learn how to blacklist a lib.")
+          (System/exit 1)))))
+
 (defn quickadd-clear-index [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
     (println (str/trim "
-Usage: neil-quicadd clear-index
+Usage: neil-quickadd clear-index
 
 Deletes the index of scanned libraries.
 "))
@@ -129,15 +146,12 @@ Deletes the index of scanned libraries.
   (fs/delete-if-exists (index-file-path))
   nil)
 
-(symbol "teodor.thing/abc")
-
-(:user/dev {:user/dev 123})
-(get {(symbol "user/dev") 123} 'user/dev)
-
-(defn quickadd-blacklist-lib [{:keys [opts]}]
+(defn quickadd-blacklist
+  "Interactively blacklist a library."
+  [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
     (println (str/trim "
-Usage: neil-quicadd blacklist-lib
+Usage: neil-quickadd blacklist
 
 Select a library to be added to the blacklist. Blacklisted libaries are ignored
 when running neil-quickadd.
@@ -160,6 +174,17 @@ when running neil-quickadd.
       (do (println "No libs indexed")
           (println "Please use `neil-quickadd scan` to populate the index")
           (System/exit 1)))))
+
+(defn quickadd-blacklist-lib [{:keys [opts]}]
+  (when (or (:h opts) (:help opts) (not (:lib opts)))
+    (println (str/trim "
+Usage: neil-quickadd blacklist-lib LIB
+
+Select a library to be added to the blacklist. Blacklisted libaries are ignored
+when running neil-quickadd.
+"))
+    (System/exit 0))
+  (blacklist-add! (symbol (:lib opts))))
 
 (declare print-subcommands)
 
@@ -216,12 +241,14 @@ Usage: neil-quickadd [COMMAND] [OPT...]
 
 Available commands:
 
-  neil-quickadd                ; Add a dependency from the index with FZF
-  neil-quickadd blacklist-lib  ; Select a library for blacklisting
-  neil-quickadd clear-index    ; Remove the index
-  neil-quickadd help           ; Print subcommands
-  neil-quickadd libs           ; Show the index
-  neil-quickadd scan           ; Scan a folder for dependencies
+  neil-quickadd                    ; Add a dependency from the index with FZF
+  neil-quickadd blacklist          ; Blacklist a library
+  neil-quickadd blacklist-lib LIB  ; Blacklist library: LIB
+  neil-quickadd blacklist-list     ; Print blacklisted libraries
+  neil-quickadd clear-index        ; Remove the index
+  neil-quickadd help               ; Print subcommands
+  neil-quickadd libs               ; Show the index
+  neil-quickadd scan               ; Scan a folder for dependencies
 
 Available options:
 
@@ -229,12 +256,14 @@ Available options:
 ")))
 
 (def dispatch-table
-  [{:cmds ["clear-index"]   :fn quickadd-clear-index}
-   {:cmds ["help"]          :fn print-subcommands }
-   {:cmds ["libs"]          :fn quickadd-libs     }
-   {:cmds ["scan"]          :fn quickadd-scan      :args->opts [:path]}
-   {:cmds ["blacklist-lib"] :fn quickadd-blacklist-lib}
-   {:cmds []                :fn quickadd          }])
+  [{:cmds ["clear-index"]    :fn quickadd-clear-index}
+   {:cmds ["help"]           :fn print-subcommands }
+   {:cmds ["libs"]           :fn quickadd-libs     }
+   {:cmds ["scan"]           :fn quickadd-scan          :args->opts [:path]}
+   {:cmds ["blacklist"]      :fn quickadd-blacklist}
+   {:cmds ["blacklist-lib"]  :fn quickadd-blacklist-lib :args->opts [:lib]}
+   {:cmds ["blacklist-list"] :fn quickadd-blacklist-list}
+   {:cmds []                 :fn quickadd          }])
 
 (defn ensure-env-ok
   "Terminate and give user error if the user needs to install something."

@@ -22,26 +22,23 @@
 (require 'projectile)
 (require 's)
 
+(defun neil-quickadd-binary ()
+  "Which neil binary name to use"
+  "neil-quickadd-dev")
+
 (defun neil-quickadd ()
-  "Quickly add a Clojure dependency with Neil."
+  "Add a deps.edn dependency."
   (interactive)
-  (let* ((libs (s-lines (s-trim (shell-command-to-string "neil-quickadd libs"))))
-         (selected (completing-read "> " libs)))
+  (let* ((libs (s-lines (s-trim (shell-command-to-string (s-concat (neil-quickadd-binary) " libs")))))
+         (selected (completing-read "add lib > " libs)))
     (projectile-run-shell-command-in-root (s-concat "neil dep add " selected))))
 
-;; adding multiple after each other didn't feel right.
-;;
-;;  1. The deps.edn buffer doesn't update
-;;  2. It's really fast to M-x neal-quickadd again.
-;;
-;; So keep this in the "box of potential ideas" for now.
-;;
-;; (defun neil-quickadd-multi ()
-;;   (interactive)
-;;   (while 't
-;;     (let* ((libs (s-lines (s-trim (shell-command-to-string "neil-quickadd libs"))))
-;;            (selected (completing-read "> " libs)))
-;;       (projectile-run-shell-command-in-root (s-concat "neil dep add " selected)))))
+(defun neil-quickadd-blacklist ()
+  "Blacklist a deps.edn dependency."
+  (interactive)
+  (let* ((libs (s-lines (s-trim (shell-command-to-string (s-concat (neil-quickadd-binary) " libs")))))
+         (selected (completing-read "blacklist lib > " libs)))
+    (shell-command-to-string (s-concat (neil-quickadd-binary) " blacklist-lib " selected))))
 
 (provide 'neil-quickadd)
 ;;; neil-quickadd.el ends here
