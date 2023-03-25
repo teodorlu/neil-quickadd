@@ -40,5 +40,10 @@
          (selected (completing-read "blacklist lib > " libs)))
     (shell-command-to-string (s-concat (neil-quickadd-binary) " blacklist-lib " selected))))
 
+(defun neil-quickadd-upgrade ()
+  "Upgrade deps.edn dependencies."
+  (interactive)
+  (projectile-run-shell-command-in-root "neil dep upgrade"))
+
 (provide 'neil-quickadd)
 ;;; neil-quickadd.el ends here
