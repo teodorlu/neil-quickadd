@@ -54,7 +54,8 @@
 
 (defn ^:private update-index! [k f & args]
   (let [m (safely-slurp-edn (index-file-path) {})
-        m (if (map? m) m {})]
+        m (if (map? m) m {})
+        m (into (sorted-map) m)]
     (neil-quickadd-ensure-share-path!)
     (spit (index-file-path)
           (pr-str (apply update m k f args)))))
