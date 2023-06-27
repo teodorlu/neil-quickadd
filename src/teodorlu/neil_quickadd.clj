@@ -149,6 +149,16 @@ Deletes the index of scanned libraries.
   (fs/delete-if-exists (index-file-path))
   nil)
 
+(defn quickadd-index-path [{:keys [opts]}]
+  (when (or (:h opts) (:help opts))
+    (println (str/trim "
+Usage: neil-quickadd-index-path
+
+Prints the location of the index file path.
+"))
+    (System/exit 0))
+  (println (index-file-path)))
+
 (defn quickadd-blacklist
   "Interactively blacklist a library."
   [{:keys [opts]}]
@@ -249,6 +259,7 @@ Available commands:
   neil-quickadd blacklist-lib LIB  ; Blacklist a library with CLI
   neil-quickadd blacklist-list     ; Print blacklisted libraries
   neil-quickadd clear-index        ; Remove the index
+  neil-quickadd index-path         ; Show the location of the index file
   neil-quickadd help               ; Print subcommands
   neil-quickadd libs               ; Show the index
   neil-quickadd scan               ; Scan a folder for dependencies
@@ -259,14 +270,17 @@ Available options:
 ")))
 
 (def dispatch-table
-  [{:cmds ["clear-index"]    :fn quickadd-clear-index}
+  [
+   {:cmds ["clear-index"]    :fn quickadd-clear-index}
+   {:cmds ["index-path"]     :fn quickadd-index-path}
    {:cmds ["help"]           :fn print-subcommands }
    {:cmds ["libs"]           :fn quickadd-libs     }
    {:cmds ["scan"]           :fn quickadd-scan          :args->opts [:path]}
    {:cmds ["blacklist"]      :fn quickadd-blacklist}
    {:cmds ["blacklist-lib"]  :fn quickadd-blacklist-lib :args->opts [:lib]}
    {:cmds ["blacklist-list"] :fn quickadd-blacklist-list}
-   {:cmds []                 :fn quickadd          }])
+   {:cmds []                 :fn quickadd          }
+   ])
 
 (defn ensure-env-ok
   "Terminate and give user error if the user needs to install something."
