@@ -241,9 +241,9 @@ Usage: neil-quickadd [COMMAND] [OPT...]
 
 Available commands:
 
-  neil-quickadd                    ; Add a dependency from the index with FZF
-  neil-quickadd blacklist          ; Blacklist a library
-  neil-quickadd blacklist-lib LIB  ; Blacklist library: LIB
+  neil-quickadd                    ; Add a dependency with FZF
+  neil-quickadd blacklist          ; Blacklist a library with FZF
+  neil-quickadd blacklist-lib LIB  ; Blacklist a library with CLI
   neil-quickadd blacklist-list     ; Print blacklisted libraries
   neil-quickadd clear-index        ; Remove the index
   neil-quickadd help               ; Print subcommands
