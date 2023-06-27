@@ -4,6 +4,7 @@
    [babashka.fs :as fs]
    [babashka.process :as process :refer [shell]]
    [clojure.edn :as edn]
+   [clojure.pprint :refer [pprint]]
    [clojure.set :as set]
    [clojure.string :as str]))
 
@@ -58,7 +59,8 @@
         m (into (sorted-map) m)]
     (neil-quickadd-ensure-share-path!)
     (spit (index-file-path)
-          (pr-str (apply update m k f args)))))
+          (with-out-str
+            (pprint (apply update m k f args))))))
 
 (defn ^:private blacklist-file-path []
   (str (neil-quickadd-share-path) "/blacklist.edn"))
