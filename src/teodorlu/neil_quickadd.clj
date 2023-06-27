@@ -107,6 +107,15 @@ Allowed OPTS:
 (defn quickadd-libs* []
   (set/difference (quickadd-libs-raw*) (quickadd-blacklist*)))
 
+(comment
+  (count
+   (quickadd-libs*))
+
+  (keys
+   (safely-slurp-edn (index-file-path) {}))
+
+  ,)
+
 (defn quickadd-libs [{:keys [opts]}]
   (when (or (:h opts) (:help opts))
     (println (str/trim "
