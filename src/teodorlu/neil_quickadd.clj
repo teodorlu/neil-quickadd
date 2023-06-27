@@ -93,7 +93,7 @@ Allowed OPTS:
 "))
     (System/exit 0))
   (let [root-dir (:path opts ".")
-        root-dir (-> root-dir fs/expand-home fs/absolutize str)
+        root-dir (-> root-dir fs/expand-home fs/absolutize fs/canonicalize str)
         {:keys [max-depth]} opts
         all-deps (scan-deps-files root-dir (when max-depth {:max-depth max-depth}))]
     (update-index! root-dir (fn [_] all-deps))))
