@@ -259,7 +259,7 @@ when running neil-quickadd.
 
 (defn print-subcommands [{}]
   (println (str/trim "
-Usage: neil-quickadd [COMMAND] [OPT...]
+Usage: neil-quickadd [COMMAND] [OPTION...]
 
 Available commands:
 
