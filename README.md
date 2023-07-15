@@ -1,34 +1,53 @@
-# neil-quickadd
+# NEil fuZZ
 
-`neil-quickadd` gets you started with your new Clojure project faster.
-Add the dependencies you usually use in seconds!
+Nezz (`nezz`, NEil fuZZ) is a fuzzy interface for managing Clojure `deps.edn` files
+built on top of [Neil].
+
+Nezz was previously known as `neil-quickadd`.
+The last version of `neil-quckadd` can be installed with:
+
+   bbin install io.github.teodorlu/neil-quickadd --sha 2589b5018ae1d29da75bd546622b1767d2dbb84d --as neil-quickadd
+
+The Nezz command line interface is _not_ backwards compaitible with Neil-quickadd.
+I consider Nezz a pure improvement over Neil-quckadd.
 
 ## Usage
 
-`neil-quickadd scan DIR` - Scan `DIR` for `deps.edn` files with dependencies.
+`nezz scan DIR` - Scan `DIR` for `deps.edn` files with dependencies.
 
-`neil-quickadd` - Quickly add an indexed dependency.
+`nezz add` - Quickly add an indexed dependency.
 
 ## FAQ
 
-**Q:** Is neil-quickadd affiliated with Neil?
+**Q:** Is Nezz affiliated with [Neil]?
 <br>
-**A:** Not really. neil-quickadd uses Neil, but is not endorsed by Neil.
+**A:**
+Nezz is developed independent from Neil, and is not endorsed by Neil.
 
-**Q:** Should this be a neil subcommand?
+**Q:** Why should I use Nezz instead of Nezz?
 <br>
-**A:** Perhaps? Not sure. I say let it marinate for a while on its own first.
+**A:** I recommend using Nezz _in addition to_ Neil.
+The main selling point for Nezz is a fine interface for adding dependencies without having to remember dependency coordinates.
 
-## Installing
+## Installing Nezz
 
-0. Install Babashka: https://github.com/babashka/babashka
-1. Install Neil: https://github.com/babashka/neil
-2. Install fzf: https://github.com/junegunn/fzf
-3. Install bbin: https://github.com/babashka/bbin
-4. Install neil-quickadd with bbin:
+Nezz has some dependneices.
+Please install them first:
+
+0. Install [Babashka]
+1. Install [Neil]
+2. Install [fzf]
+3. Install [bbin]
+
+[Babashka]: https://github.com/babashka/babashka
+[Neil]: https://github.com/babashka/neil
+[fzf]: https://github.com/junegunn/fzf
+[bbin]: https://github.com/babashka/bbin
+
+Then install Nezz with [bbin]:
 
    ```
-   bbin install io.github.teodorlu/neil-quickadd --latest-sha
+   bbin install io.github.teodorlu/nezz --latest-sha
    ```
 
 
@@ -36,20 +55,19 @@ Add the dependencies you usually use in seconds!
 
 Clone the repo,
 
-    git clone https://github.com/teodorlu/neil-quickadd.git
-    cd neil-quickadd
+    git clone https://github.com/teodorlu/nezz.git
+    cd nezz
         
-then install the script with [babashka/bbin][babashka-bbin].
+then install the script with [bbin].
 
-    bbin install . --as neil-quickadd-dev
-
-[babashka-bbin]: https://github.com/babashka/bbin
+    bbin install . --as nezz-dev
 
 ## Doom Emacs usage
 
 ```emacs-lisp
+;; TODO migrate elisp function names
 ;; packages.el
-(package! neil-quickadd :recipe (:host github :repo "teodorlu/neil-quickadd" :files ("*.el")))
+(package! neil-quickadd :recipe (:host github :repo "teodorlu/nezz" :files ("*.el")))
 
 ;; config.el
 (use-package! neil-quickadd)
@@ -57,7 +75,7 @@ then install the script with [babashka/bbin][babashka-bbin].
 
 ## Thanks!
 
-Without [@borkdude][borkdude] and [@rads][rads], `neil-quickadd` wouldn't exist. Thank you!
+Without [@borkdude][borkdude] and [@rads][rads], `nezz` wouldn't exist. Thank you!
 
 [borkdude]: https://github.com/borkdude/
 [rads]: https://github.com/rads/
