@@ -1,2 +1,2 @@
-{:deps {io.github.teodorlu/neil-quickadd {:local/root "."}}
- :bbin/bin {neil-quickadd {:main-opts ["-m" "teodorlu.neil-quickadd/-main"]}}}
+{:deps {io.github.teodorlu/nezz {:local/root "."}}
+ :bbin/bin {nezz {:main-opts ["-m" "teodorlu.neil-quickadd/-main"]}}}
