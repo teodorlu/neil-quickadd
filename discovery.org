@@ -1,0 +1,18 @@
+#+title: Nezz: discovery
+
+* 2023-07-19
+** What if Nezz was a drop-in replacement for neil?
+- =nezz dep add= to add deps - with a fuzzy fallback.
+- =nezz dep scan= to scan for deps.
+- =nezz dep change-alias= to move a dep from toplevel to an alias
+
+When nezz is called with args to =dep add=, it could fall back to raw neil commands.
+Why?
+
+Or:
+
+
+- =nezz dep add= to add deps - with a fuzzy fallback.
+- =nezz dep change-alias= to move a dep from toplevel to an alias
+- =nezz index scan= to scan for deps.
+- =nezz index list= to scan for deps.

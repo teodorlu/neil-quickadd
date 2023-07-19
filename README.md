@@ -1,15 +1,16 @@
-# NEil fuZZ
+# Nezz: Neil with fuzz
 
-Nezz (`nezz`, NEil fuZZ) is a fuzzy interface for managing Clojure `deps.edn` files
-built on top of [Neil].
+Nezz (`nezz`, Neil with fuzz) is a fuzzy interface for managing Clojure
+`deps.edn` files built on top of [Neil].
 
-Nezz was previously known as `neil-quickadd`.
-The last version of `neil-quckadd` can be installed with:
-
-   bbin install io.github.teodorlu/neil-quickadd --sha 2589b5018ae1d29da75bd546622b1767d2dbb84d --as neil-quickadd
+## Nezz was previously known as `neil-quickadd`
 
 The Nezz command line interface is _not_ backwards compaitible with Neil-quickadd.
 I consider Nezz a pure improvement over Neil-quckadd.
+
+The last version of `neil-quckadd` can be installed with:
+
+   bbin install io.github.teodorlu/neil-quickadd --sha 2589b5018ae1d29da75bd546622b1767d2dbb84d --as neil-quickadd
 
 ## Usage
 
