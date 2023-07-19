@@ -11,8 +11,7 @@ Why?
 
 Or:
 
-
-- =nezz dep add= to add deps - with a fuzzy fallback.
+- =nezz dep add= to add deps - with fuzzy help from the index.
 - =nezz dep change-alias= to move a dep from toplevel to an alias
 - =nezz index scan= to scan for deps.
 - =nezz index list= to scan for deps.
