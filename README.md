@@ -3,6 +3,14 @@
 `neil-quickadd` gets you started with your new Clojure project faster.
 Add the dependencies you usually use in seconds!
 
+## Rationale & demo
+
+Short demo:
+
+https://github.com/teodorlu/neil-quickadd/assets/5285452/5904dc48-2f90-4fbc-8db5-061d072a3e69
+
+Longer demo + motivation & rationale (Babashka-conf 2023): https://www.youtube.com/watch?v=8kRtv016KzM
+
 ## Usage
 
 `neil-quickadd scan DIR` - Scan `DIR` for `deps.edn` files with dependencies.
