@@ -5,11 +5,7 @@ Add the dependencies you usually use in seconds!
 
 ## Demo & rationale
 
-Short demo (followed by me attempting to close the mac screen recording for 20 seconds):
-
-https://github.com/teodorlu/neil-quickadd/assets/5285452/5904dc48-2f90-4fbc-8db5-061d072a3e69
-
-Longer demo + motivation & rationale (Babashka-conf 2023): https://www.youtube.com/watch?v=8kRtv016KzM
+Motivation and demonstration, presented on Babashka-conf 2023: https://www.youtube.com/watch?v=8kRtv016KzM
 
 ## Usage
 
