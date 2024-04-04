@@ -3,7 +3,7 @@
 `neil-quickadd` gets you started with your new Clojure project faster.
 Add the dependencies you usually use in seconds!
 
-## Rationale & demo
+## Demo & rationale
 
 Short demo:
 
