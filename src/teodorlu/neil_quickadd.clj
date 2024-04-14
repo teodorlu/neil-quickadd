@@ -36,7 +36,9 @@
 (defn ^:private scan-deps-files
   ([path] (scan-deps-files path nil))
   ([path {:keys [max-depth]}]
-   (let [deps-files (map str (fs/glob path "**/deps.edn" (when max-depth {:max-depth max-depth})))
+   (let [deps-files (map str (concat
+                              (fs/glob path "deps.edn")
+                              (fs/glob path "**/deps.edn" (when max-depth {:max-depth max-depth}))))
          safe-read-deps (fn [deps-file]
                           (or (seq (keys (:deps (safely-slurp-edn deps-file {}))))
                               (list)))]
