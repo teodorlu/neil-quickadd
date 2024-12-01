@@ -1,2 +1,4 @@
 {:deps {io.github.teodorlu/neil-quickadd {:local/root "."}}
- :bbin/bin {neil-quickadd {:main-opts ["-m" "teodorlu.neil-quickadd/-main"]}}}
+ :bbin/bin {neil-quickadd {:main-opts ["-m" "teodorlu.neil-quickadd/-main"]}}
+ :tasks
+ {kaocha (apply clojure "-M:kaocha" *command-line-args*)}}
