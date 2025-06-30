@@ -170,6 +170,18 @@ Prints the location of the index file path.
     (System/exit 0))
   (println (index-file-path)))
 
+(defn fzf
+  "A small, opinionated fzf choice selector"
+  [choices]
+  (let [stdin (str/join "\n" (into [":quit"] choices))
+        fzf-result (process/shell {:out :string :in stdin} "fzf")]
+    (when (not= 0 (:exit fzf-result))
+      (System/exit 0))
+    (let [selected (str/trim (:out fzf-result))]
+      (when (= ":quit" selected)
+        (System/exit 0))
+      selected)))
+
 (defn quickadd-blacklist
   "Interactively blacklist a library."
   [{:keys [opts]}]
@@ -183,18 +195,9 @@ when running neil-quickadd.
     (System/exit 0))
   (loop []
     (if-let [libs (sort (quickadd-libs*))]
-      (let [fzf-result (process/shell {:out :string :in (str/join "\n" (into [":quit"] libs))} "fzf")]
-        (when (not= 0 (:exit fzf-result))
-          ;; If FZF terminates, we terminate.
-          (System/exit 0))
-        (let [selected (str/trim (:out fzf-result))]
-          (when (= ":quit" selected)
-            ;; Also provide a "non crashing" exit option.
-            (System/exit 0))
-
-          ;; FIXME
-          (blacklist-add! (symbol selected))
-          (recur)))
+      (let [selected (fzf libs)]
+        (blacklist-add! (symbol selected))
+        (recur))
       (do (println "No libs indexed")
           (println "Please use `neil-quickadd scan` to populate the index")
           (System/exit 1)))))
@@ -239,15 +242,10 @@ when running neil-quickadd.
             ;; Also provide a "non crashing" exit option.
             (System/exit 0))
           (if (:select-version opts)
-            (let [versions-string (neil-dep-versions selected)
-                  selected-process-result (shell {:out :string :continue true :in versions-string}
-                                                 "fzf")]
-              (when (= 0 (:exit selected-process-result))
-                (let [selected-tokenized (process/tokenize (:out selected-process-result))]
-                  (prn (concat ["neil" "dep" "add"]
-                               selected-tokenized))
-                  (apply neil-dep-add selected-tokenized)
-                 (recur))))
+            (let [selected-tokenized (-> selected neil-dep-versions fzf process/tokenize)]
+              (prn (concat ["neil" "dep" "add"] selected-tokenized))
+              (apply neil-dep-add selected-tokenized)
+              (recur))
             (do
               (prn ["neil" "dep" "add" selected])
               (neil-dep-add selected)
@@ -278,6 +276,7 @@ Available commands:
 Available options:
 
   --select-version             ; Ask the user to select versions, instead of deferring to neil defaults
+  --prompt-alias               ; Ask which alias to add the dep under
 ")))
 
 (def dispatch-table
